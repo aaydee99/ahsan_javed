@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { registerUser, loginUser } from '../controllers/user.controller';
+import { loginUserByPhone, registerUser } from '../controllers/user.controller';
 
 const router = Router();
 
 router.post('/register', registerUser);
-router.post('/login', loginUser);
+router.post('/login', loginUserByPhone); // Now using phone number and password
 
 export default router;

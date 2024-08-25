@@ -4,33 +4,30 @@ import { UserService } from '../services/user.service';
 const userService = new UserService();
 
 export const registerUser = async (req: Request, res: Response) => {
-  const { username, password } = req.body;
-  try {
-    const existingUser = await userService.getUserByUsername(username);
-    if (existingUser) {
-      return res.status(400).json({ message: 'Username already taken' });
-    }
+  const { fullname, phoneno, city, password, email, country } = req.body;
 
-    const user = await userService.registerUser(username, password);
+  try {
+    const user = await userService.registerUser(fullname, phoneno, city, password, email, country);
     res.status(201).json(user);
-  } catch (err) {
-    console.error('Error registering user:', err);
-    res.status(500).json({ message: 'Internal server error' });
+  } catch (error) {
+    console.error('Error registering user:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
-export const loginUser = async (req: Request, res: Response) => {
-  const { username, password } = req.body;
+export const loginUserByPhone = async (req: Request, res: Response) => {
+  const { phoneno, password } = req.body;
+
   try {
-    const user = await userService.authenticateUser(username, password);
-    if (user) {
-      // In a real application, generate a JWT token here
-      res.status(200).json({ message: 'Login successful', user });
-    } else {
-      res.status(401).json({ message: 'Invalid credentials' });
+    const user = await userService.authenticateUserByPhone(phoneno, password);
+
+    if (!user) {
+      return res.status(400).json({ error: 'Invalid phone number or password' });
     }
-  } catch (err) {
-    console.error('Error logging in:', err);
-    res.status(500).json({ message: 'Internal server error' });
+
+    res.status(200).json({ id: user.id, fullname: user.fullname, phoneno: user.phoneno, city: user.city, email: user.email, country: user.country });
+  } catch (error) {
+    console.error('Error logging in user:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };

@@ -1,7 +1,10 @@
 export interface User {
-    id: number;
-    username: string;
-    password: string; // In a real application, you would hash passwords
-    created_at: Date;
-  }
-  
+  id: number;
+  fullname: string;
+  phoneno: string;
+  city?: string;
+  password: string; // Passwords should be hashed
+  email: string;
+  country?: string;
+  created_at: Date;
+}
